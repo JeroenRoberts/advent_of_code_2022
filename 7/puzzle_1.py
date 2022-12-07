@@ -14,13 +14,19 @@ def split_into_commands(lines):
                 args.append('')
                 if i < len(lines) - 1: 
                     for j in range(i+1, len(lines)):
-                        if (lines[j][0] == '$') or (j == len(lines)-1):
-                            if j > i+1:
-                                u = r'\n'.join(lines[i+1:j])
-                            elif j == i +1:
+                        if lines[j][0] == '$':
+                            if j == i+1:
                                 u = lines[j]
-                            output.append(u)
+                            else:
+                                u = r'\n'.join(lines[i+1:j])
                             break
+                        elif j == len(lines)-1:
+                            if j == i +1:
+                                u = lines[j]
+                            else:
+                                u = r'\n'.join(lines[i+1:j+1])
+                            break
+                    output.append(u)
             N_cmds += 1
     return N_cmds, cmds, args, output
 
