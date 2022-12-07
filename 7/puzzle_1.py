@@ -70,8 +70,6 @@ if __name__ == "__main__":
                         current_dir += args[i]
             if cmds[i] == 'ls':
                 info = {'sub_folders': [], 'local_file_size': 0, 'parent_folder': get_parent_dir(current_dir)}
-                if current_dir == '/trtl/vmjljc/zcwpb':
-                    print(f"{output[i] =}")
 
                 if output[i] != '':
                     for x, y in [x.split(' ') for x in output[i].split(r'\n')]:
