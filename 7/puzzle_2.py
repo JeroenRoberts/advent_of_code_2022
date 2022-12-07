@@ -1,47 +1,7 @@
-def split_into_commands(lines):
-    N_cmds = 0
-    cmds = []
-    args = []
-    output = []
-    for i, line in enumerate(lines):
-        if line[0] == '$':
-            cmds.append(line[2:4])
-            bin = line[2:4]
-            if bin == 'cd':
-                args.append(line.split(' ')[-1])
-                output.append('')
-            elif bin == 'ls':
-                args.append('')
-                if i < len(lines) - 1: 
-                    for j in range(i+1, len(lines)):
-                        if (lines[j][0] == '$') or (j == len(lines)-1):
-                            if j > i+1:
-                                u = r'\n'.join(lines[i+1:j])
-                            elif j == i +1:
-                                u = lines[j]
-                            output.append(u)
-                            break
-            N_cmds += 1
-    return N_cmds, cmds, args, output
-
-def print_list(l):
-    for k in range(len(l)):
-        print(f"{l[k]}")
-
-def get_parent_dir(current_dir):
-    indices = [i for i, x in enumerate(current_dir) if x == '/']
-    if len(indices) > 1:
-        last = indices[-1]
-        parent_dir = current_dir[:last]
-    else:
-        parent_dir = '/'
-    return parent_dir
-
-def recurse_total_file_size(info_dirs, info):
-    total_file_size = info['local_file_size']
-    for sub_folder in info['sub_folders']:
-        total_file_size += recurse_total_file_size(info_dirs, info_dirs[sub_folder])
-    return total_file_size
+from puzzle_1 import split_into_commands
+from puzzle_1 import print_list
+from puzzle_1 import get_parent_dir
+from puzzle_1 import recurse_total_file_size
 
 if __name__ == "__main__":
     # file_name = 'small_input.txt'
