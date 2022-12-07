@@ -46,5 +46,5 @@ if __name__ == "__main__":
     min = 2**31
     for k, v in info_dirs.items():
         if v['total_file_size'] < min and v['total_file_size'] > to_delete:
-            max = v['total_file_size']
-    print(f"{max =}")
+            min = v['total_file_size']
+    print(f"{min =}")
