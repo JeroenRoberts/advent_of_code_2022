@@ -33,9 +33,21 @@ def split_into_commands(lines):
                             break
             N_cmds += 1
     return N_cmds, cmds, args, output
+
 def print_list(l):
     for k in range(len(l)):
         print(f"{l[k]}")
+
+def get_parent_dir(dir):
+    # parent_dir = ''.join(current_dir.split('/')[:-1])
+    split = current_dir.split('/')
+    indices = [i for i, x in enumerate(split) if x == '/']
+    if len(indices) > 1:
+        last = indices[-1]
+        parent_dir = split[:last]
+    else:
+        parent_dir = '/'
+    return parent_dir
 
 if __name__ == "__main__":
     file_name = 'small_input.txt'
@@ -45,7 +57,20 @@ if __name__ == "__main__":
         lines = [l.rstrip() for l in f.readlines()]
         N_cmds, cmds, args, output = split_into_commands(lines)
         for i in range(N_cmds):
-            print(f"\n\n{i=}")
-            print(f"{cmds[i] =}")
-            print(f"{args[i] =}")
-            print_list(output[i].split(r'\n'))
+            if cmds[i] == 'cd':
+                print(f"{cmds[i] =} {args[i]}")
+                if args[i] == '/':
+                    current_dir = '/'
+                elif args[i] == '..':
+                    current_dir = get_parent_dir(current_dir)
+                else:
+                    if current_dir != '/':
+                        current_dir += '/' + args[i]
+                    else:
+                        current_dir += args[i]
+            print(f"{current_dir =}")
+            # info_dir = {'sub_folders': , 'local_file_size': }
+            # print(f"\n\n{i=}")
+            # print(f"{cmds[i] =}")
+            # print(f"{args[i] =}")
+            # print_list(output[i].split(r'\n'))
