@@ -15,7 +15,10 @@ def split_into_commands(lines):
                 if i < len(lines) - 1: 
                     for j in range(i+1, len(lines)):
                         if (lines[j][0] == '$') or (j == len(lines)-1):
-                            u = r'\n'.join(lines[i+1:j])
+                            if j > i+1:
+                                u = r'\n'.join(lines[i+1:j])
+                            elif j == i +1:
+                                u = lines[j]
                             output.append(u)
                             break
             N_cmds += 1
@@ -61,6 +64,9 @@ if __name__ == "__main__":
                         current_dir += args[i]
             if cmds[i] == 'ls':
                 info = {'sub_folders': [], 'local_file_size': 0, 'parent_folder': get_parent_dir(current_dir)}
+                if current_dir == '/trtl/vmjljc/zcwpb':
+                    print(f"{output[i] =}")
+
                 if output[i] != '':
                     for x, y in [x.split(' ') for x in output[i].split(r'\n')]:
                         if x == 'dir':
@@ -72,6 +78,8 @@ if __name__ == "__main__":
                             info['local_file_size'] += int(x)
                 info_dirs[current_dir] = info
 
+    # for k, v in info_dirs.items():
+    #     print(f"{k =} {v =}")
     for k, v in info_dirs.items():
         v['total_file_size'] = recurse_total_file_size(info_dirs, v)
 
