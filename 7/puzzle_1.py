@@ -26,11 +26,10 @@ def print_list(l):
         print(f"{l[k]}")
 
 def get_parent_dir(dir):
-    split = current_dir.split('/')
-    indices = [i for i, x in enumerate(split) if x == '/']
+    indices = [i for i, x in enumerate(current_dir) if x == '/']
     if len(indices) > 1:
         last = indices[-1]
-        parent_dir = split[:last]
+        parent_dir = current_dir[:last]
     else:
         parent_dir = '/'
     return parent_dir
@@ -61,15 +60,16 @@ if __name__ == "__main__":
                     else:
                         current_dir += args[i]
             if cmds[i] == 'ls':
-                info = {'sub_folders': [], 'local_file_size': 0}
-                for x, y in [x.split(' ') for x in output[i].split(r'\n')]:
-                    if x == 'dir':
-                        if current_dir == '/':
-                            info['sub_folders'] += [current_dir + y]
+                info = {'sub_folders': [], 'local_file_size': 0, 'parent_folder': get_parent_dir(current_dir)}
+                if output[i] != '':
+                    for x, y in [x.split(' ') for x in output[i].split(r'\n')]:
+                        if x == 'dir':
+                            if current_dir == '/':
+                                info['sub_folders'] += [current_dir + y]
+                            else:
+                                info['sub_folders'] += [current_dir + '/' + y]
                         else:
-                            info['sub_folders'] += [current_dir + '/' + y]
-                    else:
-                        info['local_file_size'] += int(x)
+                            info['local_file_size'] += int(x)
                 info_dirs[current_dir] = info
 
     for k, v in info_dirs.items():
