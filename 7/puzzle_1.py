@@ -1,16 +1,3 @@
-# def store_info(current_dir, list, dictionary):
-#     dictionary['current_dir'] = 
-
-
-# def parse(command, current_directory, prev_dictionary):
-#     if command[2:4] == 'cd':
-#         arg = command.split(' ')[-1]
-#         if arg = '..'
-#         current_dir = arg
-#         prev_dictionary
-#     elif command[2:4] == 'ls':
-#         store_list(current_dir, prev_dictionary)
-
 def split_into_commands(lines):
     N_cmds = 0
     cmds = []
@@ -39,7 +26,6 @@ def print_list(l):
         print(f"{l[k]}")
 
 def get_parent_dir(dir):
-    # parent_dir = ''.join(current_dir.split('/')[:-1])
     split = current_dir.split('/')
     indices = [i for i, x in enumerate(split) if x == '/']
     if len(indices) > 1:
@@ -49,16 +35,22 @@ def get_parent_dir(dir):
         parent_dir = '/'
     return parent_dir
 
+def recurse_total_file_size(info_dirs, info):
+    total_file_size = info['local_file_size']
+    for sub_folder in info['sub_folders']:
+        total_file_size += recurse_total_file_size(info_dirs, info_dirs[sub_folder])
+    return total_file_size
+
 if __name__ == "__main__":
-    file_name = 'small_input.txt'
-    top_level_dirs = {}
+    # file_name = 'small_input.txt'
+    file_name = 'input.txt'
+    info_dirs = {}
     current_dir = ''
     with open(file_name) as f:
         lines = [l.rstrip() for l in f.readlines()]
         N_cmds, cmds, args, output = split_into_commands(lines)
         for i in range(N_cmds):
             if cmds[i] == 'cd':
-                print(f"{cmds[i] =} {args[i]}")
                 if args[i] == '/':
                     current_dir = '/'
                 elif args[i] == '..':
@@ -68,9 +60,24 @@ if __name__ == "__main__":
                         current_dir += '/' + args[i]
                     else:
                         current_dir += args[i]
-            print(f"{current_dir =}")
-            # info_dir = {'sub_folders': , 'local_file_size': }
-            # print(f"\n\n{i=}")
-            # print(f"{cmds[i] =}")
-            # print(f"{args[i] =}")
-            # print_list(output[i].split(r'\n'))
+            if cmds[i] == 'ls':
+                info = {'sub_folders': [], 'local_file_size': 0}
+                for x, y in [x.split(' ') for x in output[i].split(r'\n')]:
+                    if x == 'dir':
+                        if current_dir == '/':
+                            info['sub_folders'] += [current_dir + y]
+                        else:
+                            info['sub_folders'] += [current_dir + '/' + y]
+                    else:
+                        info['local_file_size'] += int(x)
+                info_dirs[current_dir] = info
+
+    for k, v in info_dirs.items():
+        v['total_file_size'] = recurse_total_file_size(info_dirs, v)
+
+    answer = 0
+    for k, v in info_dirs.items():
+        if v['total_file_size'] < 100000:
+            answer += v['total_file_size']
+    print(f"{answer =}")
+
